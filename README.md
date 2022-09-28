@@ -2,93 +2,89 @@
 
 
 
-##remote PS
+### remote PS
 ```powershell
 Enter-PSSession -ComputerName nameishere
 ```
 
-#remote cmd
+### remote cmd
 ```powershell
 psexec \\hostname cmd
 ```
 
-#.net version
+### check .net version
 ```powershell
 Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' | Select-Object Version
 ```
 
-#hyper-v host
+### get hyper-v host
 ```powershell
 Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Virtual Machine\Guest\Parameters\' | Select-Object HostName
 ```
 
-#installed apps
+### sscm installed apps
 ```powershell
 get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\ClientSDK" | Select-Object FullName, InstallState
 ```
 
-#sscm apps
+### get sscm apps
 ```powershell
 get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\ClientSDK" | Select-Object FullName, InstallState
 ```
 
-#installed softwares
+### installed softwares LOOK
 ```powershell
 get-wmiobject -Class Win32_Product | Select-Object Name, Version
 ```
 
-##HASH
+### check hash
 ```powershell
 Get-FileHash .\dosya -Algorithm SHA256
 ```
 
-#ITServices
+### install sscm agent
 ```powershell
-C:\Windows\CCMSetup.exe /mp:WIPRDSCCMmp01.itservices.local SMSSITECODE=INT FSP=WIPRDSCCMmp01.itservices.local
+CCMSetup.exe /mp:sub.domain.com SMSSITECODE=domainsitecode FSP=sscmserver.domain.com
 ```
 
-#toplu ou taşıma
+### move all AD OU
 ```powershell
-Get-Content C:\tmp\Srv1.txt| foreach {Get-ADComputer -Filter {Name -Like $_} |Move-ADObject -TargetPath "OU=Tier0,OU=App Servers,OU=Production Servers,OU=TPP Servers,DC=Tpp,DC=local"}
+Get-Content C:\import.txt| foreach {Get-ADComputer -Filter {Name -Like $_} |Move-ADObject -TargetPath "OU=Tier0,OU=App Servers,OU=OU,OU=OU,DC=DC,DC=local"}
 ```
 
-#reg query
-```powershell
-reg query HKLM\System\CurrentControlSet\services\CSAgent\Sim\ /f AG
-```
-
-##permission
+### get permissions
 ```powershell
 net localgroup Administrators
 net localgroup "Remote Desktop Users"
 ```
 
-#Inbox Check
+### Exchange Mail Inbox Check
 ```powershell
-Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end "9/22/2022 3:00:00 PM" -Sender "sturan@osmanlimenkul.com.tr" -Recipients "portfoysaklama@denizbank.com" | Where-Object {$_.EventId -like "FA*"}
+Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end "9/22/2022 3:00:00 PM" -Sender "sender@mail.com" -Recipients "recipients@mail.com"
 ```
 
-#AutoReply
+### Set Mail AutoReply
 ```powershell
-Set-MailboxAutoReplyConfiguration SAVASCID -AutoReplyState enabled -ExternalAudience all -InternalMessage "message"
+Set-MailboxAutoReplyConfiguration ADUSERNAME -AutoReplyState enabled -ExternalAudience all -InternalMessage "Message was here"
 ```
 
-#get domain users
+### Get domain users
 ```powershell
-Get-ADUser -server s0134adrep01.deniz.denizbank.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties lastlogondate, enabled | Select-Object Name,SamAccountName,lastlogondate, enabled | 
-Export-csv C:\tmp\Deniz_domain_users.csv -NoTypeInformation -Encoding UTF8
+Get-ADUser -server adserver.domain.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties lastlogondate, enabled | Select-Object Name,SamAccountName,lastlogondate, enabled | 
+Export-csv C:\domain_users.csv -NoTypeInformation -Encoding UTF8
 ```
 
 ---------------------
+
 ```powershell
 $attributes = 'EmployeeID','Name','SamAccountName','Description','PasswordLastSet','emailaddress','PasswordNeverExpires','whencreated','whenchanged','lastlogondate',@{n='lastlogontimeStamp';e={[DateTime]::FromFileTime($_.lastlogontimestamp)}},'enabled'
  
-Get-ADUser -server s0134adrep01.deniz.denizbank.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties * | select $attributes | 
-Export-csv C:\tmp\Deniz_users.csv -NoTypeInformation -Encoding UTF8 -Delimiter ";" 
+Get-ADUser -server adserver.domain.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties * | select $attributes | 
+Export-csv C:\domain_users.csv -NoTypeInformation -Encoding UTF8 -Delimiter ";" 
 ```
 
-#get mail address
+### Get mail address from AD users
 ```powershell
-Get-ADObject -Filter {(objectclass -eq 'contact') -and ((targetaddress -like "*denizbank.com*") -or (targetaddress -like "*sberbank*"))} -Properties *  | 
-select cn,targetaddress,memberof,objectclass | out-file c:\temp\sber_contacts.csv 
+Get-ADObject -Filter {(objectclass -eq 'contact') -and ((targetaddress -like "*domain.com*") -or (targetaddress -like "*filteradresshere*"))} -Properties *  | 
+select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contacts.csv 
 ```
