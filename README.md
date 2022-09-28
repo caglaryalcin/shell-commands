@@ -1,6 +1,6 @@
-# shell-commands
+## shell-commands
 
-
+PS commands I use often
 
 #### remote PS
 ```powershell
