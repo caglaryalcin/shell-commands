@@ -1,6 +1,6 @@
 # shell-commands
 
-# shell-commands
+
 
 ##remote PS
 Enter-PSSession -ComputerName nameishere
@@ -46,4 +46,21 @@ Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end
 
 #AutoReply
 Set-MailboxAutoReplyConfiguration SAVASCID -AutoReplyState enabled -ExternalAudience all -InternalMessage "message"
+
+#get domain users
+Get-ADUser -server s0134adrep01.deniz.denizbank.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties lastlogondate, enabled | Select-Object Name,SamAccountName,lastlogondate, enabled | 
+Export-csv C:\tmp\Deniz_domain_users.csv -NoTypeInformation -Encoding UTF8
+
+---------------------
+
+$attributes = 'EmployeeID','Name','SamAccountName','Description','PasswordLastSet','emailaddress','PasswordNeverExpires','whencreated','whenchanged','lastlogondate',@{n='lastlogontimeStamp';e={[DateTime]::FromFileTime($_.lastlogontimestamp)}},'enabled'
+ 
+Get-ADUser -server s0134adrep01.deniz.denizbank.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties * | select $attributes | 
+Export-csv C:\tmp\Deniz_users.csv -NoTypeInformation -Encoding UTF8 -Delimiter ";" 
+
+#get mail address
+Get-ADObject -Filter {(objectclass -eq 'contact') -and ((targetaddress -like "*denizbank.com*") -or (targetaddress -like "*sberbank*"))} -Properties *  | 
+select cn,targetaddress,memberof,objectclass | out-file c:\temp\sber_contacts.csv 
+
+
 
