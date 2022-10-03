@@ -74,6 +74,11 @@ Get-ADUser -server adserver.domain.com -Filter {enabled -eq "true" -and objectcl
 Export-csv C:\domain_users.csv -NoTypeInformation -Encoding UTF8
 ```
 
+#### Get locked user from domain
+```powershell
+Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-Object Name, SamAccountName, DistinguishedName | Export-CSV “C:\LockedUserList.CSV” -NoTypeInform
+```
+
 ---------------------
 
 ```powershell
