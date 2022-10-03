@@ -2,57 +2,57 @@
 
 PS commands I use often
 
-#### remote PS
+#### Remote PS
 ```powershell
 Enter-PSSession -ComputerName nameishere
 ```
 
-#### remote cmd
+#### Remote cmd
 ```powershell
 psexec \\hostname cmd
 ```
 
-#### check .net version
+#### Check .net version
 ```powershell
 Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' | Select-Object Version
 ```
 
-#### get hyper-v host
+#### Get hyper-v host
 ```powershell
 Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Virtual Machine\Guest\Parameters\' | Select-Object HostName
 ```
 
-#### sscm installed apps
+#### Sscm installed apps
 ```powershell
 get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\ClientSDK" | Select-Object FullName, InstallState
 ```
 
-#### get sscm apps
+#### Get sscm apps
 ```powershell
 get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\ClientSDK" | Select-Object FullName, InstallState
 ```
 
-#### installed softwares LOOK
+#### Installed softwares LOOK
 ```powershell
 get-wmiobject -Class Win32_Product | Select-Object Name, Version
 ```
 
-#### check hash
+#### Check hash
 ```powershell
 Get-FileHash .\dosya -Algorithm SHA256
 ```
 
-#### install sscm agent
+#### Install sscm agent
 ```powershell
 CCMSetup.exe /mp:sub.domain.com SMSSITECODE=domainsitecode FSP=sscmserver.domain.com
 ```
 
-#### move all AD OU
+#### Collectively Move all AD OU
 ```powershell
 Get-Content C:\import.txt| foreach {Get-ADComputer -Filter {Name -Like $_} |Move-ADObject -TargetPath "OU=Tier0,OU=App Servers,OU=OU,OU=OU,DC=DC,DC=local"}
 ```
 
-#### get permissions
+#### Get permissions
 ```powershell
 net localgroup Administrators
 net localgroup "Remote Desktop Users"
@@ -68,15 +68,15 @@ Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end
 Set-MailboxAutoReplyConfiguration ADUSERNAME -AutoReplyState enabled -ExternalAudience all -InternalMessage "Message was here"
 ```
 
+#### Get locked user from domain
+```powershell
+Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-Object Name, SamAccountName, DistinguishedName | Export-CSV “C:\LockedUserList.CSV” -NoTypeInform
+```
+
 #### Get domain users
 ```powershell
 Get-ADUser -server adserver.domain.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties lastlogondate, enabled | Select-Object Name,SamAccountName,lastlogondate, enabled | 
 Export-csv C:\domain_users.csv -NoTypeInformation -Encoding UTF8
-```
-
-#### Get locked user from domain
-```powershell
-Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-Object Name, SamAccountName, DistinguishedName | Export-CSV “C:\LockedUserList.CSV” -NoTypeInform
 ```
 
 ---------------------
