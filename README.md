@@ -76,6 +76,7 @@ Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-O
 #### Get user mail export
 ```powershell
 New-MailboxExportRequest -Mailbox username -AcceptLargeDataLoss -BadItemLimit 150 -FilePath \\filepath\file.pst
+Get-MailboxExportRequest
 ```
 
 #### Get domain users
