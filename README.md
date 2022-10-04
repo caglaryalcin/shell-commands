@@ -58,7 +58,7 @@ net localgroup Administrators
 net localgroup "Remote Desktop Users"
 ```
 
-#### Exchange Mail Inbox Check
+#### Exchange Mail Inbox Receipt Check
 ```powershell
 Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end "9/22/2022 3:00:00 PM" -Sender "sender@mail.com" -Recipients "recipients@mail.com"
 ```
@@ -75,8 +75,13 @@ Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-O
 
 #### Get user mail export
 ```powershell
+(all)
 New-MailboxExportRequest -Mailbox username -AcceptLargeDataLoss -BadItemLimit 150 -FilePath \\filepath\file.pst
+(The date is intermittent / The dates should be set according to the zone setting of the machine to be exported)
+New-MailboxExportRequest -ContentFilter {(Received -lt '07/26/2021') -and (Received -gt '07/05/2021')} -Mailbox "XxXxX" -Name username -FilePath \\filepath\inboxname.pst
+(status export)
 Get-MailboxExportRequest
+(remove of completed)
 Get-MailboxExportRequest -Status completed | Remove-MailboxExportRequest
 ```
 
