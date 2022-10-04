@@ -73,6 +73,11 @@ Set-MailboxAutoReplyConfiguration ADUSERNAME -AutoReplyState enabled -ExternalAu
 Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-Object Name, SamAccountName, DistinguishedName | Export-CSV “C:\LockedUserList.CSV” -NoTypeInform
 ```
 
+#### Get user mail export
+```powershell
+New-MailboxExportRequest -Mailbox username -AcceptLargeDataLoss -BadItemLimit 150 -FilePath \\filepath\file.pst
+```
+
 #### Get domain users
 ```powershell
 Get-ADUser -server adserver.domain.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties lastlogondate, enabled | Select-Object Name,SamAccountName,lastlogondate, enabled | 
