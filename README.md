@@ -108,6 +108,7 @@ select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contac
 #### Change dns of servers
 ```powershell
 $servers = Get-Content "E:\liste.txt"
+$servers = "hostname"
 foreach($server in $servers){
     Write-Host "Connect to $server..."
     $nics = Get-WmiObject Win32_NetworkAdapterConfiguration -ComputerName $server   | Where{$_.IPEnabled -eq "TRUE"}
@@ -128,6 +129,7 @@ foreach($nic in $nics){
 #### To get information about the last time the servers communicated with the domain
 ```powershell
 $ComputerList = get-content "E:\Liste.txt"
+#$ComputerList = "hostname"
   foreach ($Computer in $ComputerList)
 {
   TRY
