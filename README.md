@@ -90,7 +90,6 @@ Get-MailboxExportRequest -Status completed | Remove-MailboxExportRequest
 Get-ADUser -server adserver.domain.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties lastlogondate, enabled | Select-Object Name,SamAccountName,lastlogondate, enabled | 
 Export-csv C:\domain_users.csv -NoTypeInformation -Encoding UTF8
 ```
-
 ---------------------
 
 ```powershell
@@ -104,4 +103,24 @@ Export-csv C:\domain_users.csv -NoTypeInformation -Encoding UTF8 -Delimiter ";"
 ```powershell
 Get-ADObject -Filter {(objectclass -eq 'contact') -and ((targetaddress -like "*domain.com*") -or (targetaddress -like "*filteradresshere*"))} -Properties *  | 
 select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contacts.csv 
+```
+
+#### Change dns of servers
+```powershell
+$servers = Get-Content "E:\liste.txt"
+foreach($server in $servers){
+    Write-Host "Connect to $server..."
+    $nics = Get-WmiObject Win32_NetworkAdapterConfiguration -ComputerName $server   | Where{$_.IPEnabled -eq "TRUE"}
+    $newDNS = "1.1.1.1","1.0.0.1"
+foreach($nic in $nics){
+    Write-Host "`tExisting DNS Servers " $nic.DNSServerSearchOrder
+    $x = $nic.SetDNSServerSearchOrder($newDNS)
+    if($x.ReturnValue -eq 0){
+    Write-Host "`tSuccessfully Changed DNS Servers on " $server -ForegroundColor Green
+     }
+     else{
+     Write-Host "`tFailed to Change DNS Servers on " $server -ForegroundColor Red
+         }
+   }
+}
 ```
