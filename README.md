@@ -124,3 +124,21 @@ foreach($nic in $nics){
    }
 }
 ```
+
+#### To get information about the last time the servers communicated with the domain
+```powershell
+$ComputerList = get-content "E:\Liste.txt"
+  foreach ($Computer in $ComputerList)
+{
+  TRY
+    {
+  $LastLogonQuery = Get-ADComputer $Computer -Properties lastlogontimestamp | 
+    #Select-Object @{n="Computer";e={$_.Name}}, @{Name="Lastlogon"; Expression={[DateTime]::FromFileTime($_.lastLogonTimestamp)}}
+    Select-Object @{n='lastLogonTimestamp';e={[DateTime]::FromFileTime($_.lastLogonTimestamp).ToString("dd/MM/yyyy")}}
+     $Computer   +  "*ADLastLogonTime*"  + $LastLogonQuery.lastLogonTimestamp
+ }
+Catch    {
+   $Computer   +  "*ADLastLogonTime*"  + "NOObject"
+	}
+}
+```
