@@ -108,7 +108,7 @@ select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contac
 #### Change dns of servers
 ```powershell
 $servers = Get-Content "E:\liste.txt"
-$servers = "hostname"
+#$servers = "hostname"
 foreach($server in $servers){
     Write-Host "Connect to $server..."
     $nics = Get-WmiObject Win32_NetworkAdapterConfiguration -ComputerName $server   | Where{$_.IPEnabled -eq "TRUE"}
