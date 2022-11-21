@@ -68,6 +68,11 @@ Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end
 Set-MailboxAutoReplyConfiguration ADUSERNAME -AutoReplyState enabled -ExternalAudience all -InternalMessage "Message was here"
 ```
 
+#### Install Telnet Client
+```powershell
+Install-WindowsFeature -name Telnet-Client
+```
+
 #### Get locked user from domain
 ```powershell
 Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-Object Name, SamAccountName, DistinguishedName | Export-CSV “C:\LockedUserList.CSV” -NoTypeInform
