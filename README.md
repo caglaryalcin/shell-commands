@@ -83,6 +83,13 @@ Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-O
 Get-ADGroupMember -Identity 'Groupname' -Recursive | Select Name
 ```
 
+#### Get Active Users on AD
+```powershell
+Get-ADUser -server dc.hostname.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties * | Select-Object Name,SamAccountName,lastlogondate | 
+Export-csv C:\DomainUsers.csv -NoTypeInformation -Encoding UTF8
+
+```
+
 #### Get user mail export
 ```powershell
 (all)
