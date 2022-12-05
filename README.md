@@ -78,6 +78,11 @@ Install-WindowsFeature -name Telnet-Client
 Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-Object Name, SamAccountName, DistinguishedName | Export-CSV “C:\LockedUserList.CSV” -NoTypeInform
 ```
 
+#### Get Group Members from AD
+```powershell
+Get-ADGroupMember -Identity 'Groupname' -Recursive | Select Name
+```
+
 #### Get user mail export
 ```powershell
 (all)
