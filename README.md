@@ -12,6 +12,11 @@ Enter-PSSession -ComputerName nameishere
 psexec \\hostname cmd
 ```
 
+#### Delete files with cmd
+```
+rmdir /s /q path
+```
+
 #### Check .net version
 ```powershell
 Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' | Select-Object Version
@@ -56,6 +61,11 @@ Get-Content C:\import.txt| foreach {Get-ADComputer -Filter {Name -Like $_} |Move
 ```powershell
 net localgroup Administrators
 net localgroup "Remote Desktop Users"
+```
+
+#### Get users with ID
+```
+gwmi win32_userprofile | select localpath, sid
 ```
 
 #### Exchange Mail Inbox Receipt Check
