@@ -14,7 +14,13 @@ psexec \\hostname cmd
 
 #### Delete files with cmd
 ```
-rmdir /s /q path
+rmdir /s /q C:\Windows.old
+```
+```
+takeown /F "C:\Windows.old" /A /R /D Y
+```
+```
+RD /S /Q "C:\Windows.old"
 ```
 
 #### Check .net version
