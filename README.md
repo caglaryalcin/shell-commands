@@ -69,7 +69,7 @@ net localgroup Administrators
 net localgroup "Remote Desktop Users"
 ```
 
-#### Get users with ID
+#### Get users with ID (local)
 ```
 gwmi win32_userprofile | select localpath, sid
 ```
