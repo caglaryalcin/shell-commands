@@ -43,7 +43,7 @@ get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\Client
 get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\ClientSDK" | Select-Object FullName, InstallState
 ```
 
-#### Installed softwares LOOK
+#### Get installed softwares
 ```powershell
 get-wmiobject -Class Win32_Product | Select-Object Name, Version
 ```
