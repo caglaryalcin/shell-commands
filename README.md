@@ -113,7 +113,6 @@ Get-ADGroupMember -Identity 'Groupname' -Recursive | Select Name
 ```powershell
 Get-ADUser -server dc.hostname.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties * | Select-Object Name,SamAccountName,lastlogondate | 
 Export-csv C:\DomainUsers.csv -NoTypeInformation -Encoding UTF8
-
 ```
 
 #### Get user mail export
@@ -146,6 +145,11 @@ Export-csv C:\domain_users.csv -NoTypeInformation -Encoding UTF8 -Delimiter ";"
 ```powershell
 Get-ADObject -Filter {(objectclass -eq 'contact') -and ((targetaddress -like "*domain.com*") -or (targetaddress -like "*filteradresshere*"))} -Properties *  | 
 select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contacts.csv 
+```
+
+#### Get name and mail address from AD groups
+```
+Get-ADGroup -properties * -Filter  {(name -like "*sube grubu*")} |select name,mail | Export-Csv "C:\SubeGrubu.csv" -Encoding UTF8 -NoTypeInformation
 ```
 
 #### Change dns of servers
