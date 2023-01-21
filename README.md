@@ -74,6 +74,16 @@ net localgroup "Remote Desktop Users"
 gwmi win32_userprofile | select localpath, sid
 ```
 
+#### Get user from group
+```
+Get-ADGroupMember -Identity "groupname" -Recursive | Get-ADUser -Properties Name,  EmployeeID, userPrincipalName, distinguishedName
+```
+
+#### Get user from group with export
+```
+Select-Object NAme , sAMAccountName , EmployeeID,userPrincipalName,distinguishedName, Enabled   |  Export-csv -path C:\filename.csv -notypeinformation -Encoding UTF8 
+```
+
 #### Exchange Mail Inbox Receipt Check
 ```powershell
 Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end "9/22/2022 3:00:00 PM" -Sender "sender@mail.com" -Recipients "recipients@mail.com"
