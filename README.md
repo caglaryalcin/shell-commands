@@ -64,6 +64,16 @@ net localgroup Administrators
 net localgroup "Remote Desktop Users"
 ```
 
+#### Get samaccountname from name and surname
+```
+Get-ADUser -Filter 'Name -like "*namesurname"' | Format-Table Name,SamAccountName -A
+```
+
+#### Get userPrincipalNames from samaccountname
+```
+Get-ADUser accountname -Properties * | select userPrincipalName
+```
+
 #### Get users with ID (local)
 ```
 gwmi win32_userprofile | select localpath, sid
