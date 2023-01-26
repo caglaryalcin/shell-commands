@@ -86,7 +86,7 @@ Get-ADGroupMember -Identity "groupname" -Recursive | Get-ADUser -Properties Name
 
 #### Get user from group with export
 ```
-Select-Object NAme , sAMAccountName , EmployeeID,userPrincipalName,distinguishedName, Enabled   |  Export-csv -path C:\filename.csv -notypeinformation -Encoding UTF8 
+Get-ADGroupMember -Identity "groupname" -Recursive | Get-ADUser -Properties Name, EmployeeID, userPrincipalName, distinguishedName | Export-csv -path C:\caglar-export\test.csv -notypeinformation -Encoding UTF8 
 ```
 
 #### Exchange Mail Inbox Receipt Check
