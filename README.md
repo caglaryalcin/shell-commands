@@ -157,6 +157,12 @@ select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contac
 Get-ADGroup -properties * -Filter  {(name -like "*sube grubu*")} |select name,mail | Export-Csv "C:\SubeGrubu.csv" -Encoding UTF8 -NoTypeInformation
 ```
 
+#Get last modified date of computer object from AD
+Get-ADcomputer -Filter 'Name -like "*computernamewashere"' -properties * | sort lastlogondate | FT name, whenChanged
+
+#Get OU of computer object from AD
+Get-ADcomputer -Filter 'Name -like "*computernamewashere"' -properties * | sort lastlogondate | FT name, CanonicalName
+
 #### Change dns of servers
 ```powershell
 $servers = Get-Content "E:\liste.txt"
