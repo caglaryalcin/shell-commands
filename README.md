@@ -160,8 +160,11 @@ Get-ADGroup -properties * -Filter  {(name -like "*sube grubu*")} |select name,m
 #Get last modified date of computer object from AD
 Get-ADcomputer -Filter 'Name -like "*computernamewashere"' -properties * | sort lastlogondate | FT name, whenChanged
 
-#Get OU of computer object from AD
+#Get OU of hostname from AD
 Get-ADcomputer -Filter 'Name -like "*computernamewashere"' -properties * | sort lastlogondate | FT name, CanonicalName
+
+#Get OU of hostname list from AD
+Get-Content C:\hostnames.txt | foreach {Get-ADComputer -Filter {Name -Like $_} -properties *} | sort lastlogondate | FT name, CanonicalName
 
 #### Change dns of servers
 ```powershell
