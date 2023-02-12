@@ -205,3 +205,8 @@ Catch    {
 	}
 }
 ```
+
+#### Get 0kb files from path
+```powershell
+Get-ChildItem -Path C:\SourcePATH -Recurse -Force | Where-Object { $_.PSIsContainer -eq $false -and $_.Length -eq 0 } | Select -ExpandProperty FullName | Add-Content -Path c:\export.txt
+```
