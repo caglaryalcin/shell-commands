@@ -13,13 +13,13 @@ psexec \\hostname cmd
 ```
 
 #### Delete files with cmd
-```
+```powershell
 rmdir /s /q C:\Windows.old
 ```
-```
+```powershell
 takeown /F "C:\Windows.old" /A /R /D Y
 ```
-```
+```powershell
 RD /S /Q "C:\Windows.old"
 ```
 
@@ -65,27 +65,27 @@ net localgroup "Remote Desktop Users"
 ```
 
 #### Get samaccountname from name and surname
-```
+```powershell
 Get-ADUser -Filter 'Name -like "*namesurname"' | Format-Table Name,SamAccountName -A
 ```
 
 #### Get userPrincipalNames from samaccountname
-```
+```powershell
 Get-ADUser accountname -Properties * | select userPrincipalName
 ```
 
 #### Get users with ID (local)
-```
+```powershell
 gwmi win32_userprofile | select localpath, sid
 ```
 
 #### Get user from group
-```
+```powershell
 Get-ADGroupMember -Identity "groupname" -Recursive | Get-ADUser -Properties Name,  EmployeeID, userPrincipalName, distinguishedName
 ```
 
 #### Get user from group with export
-```
+```powershell
 Get-ADGroupMember -Identity "groupname" -Recursive | Get-ADUser -Properties Name, EmployeeID, userPrincipalName, distinguishedName | Export-csv -path C:\caglar-export\test.csv -notypeinformation -Encoding UTF8 
 ```
 
@@ -153,8 +153,13 @@ select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contac
 ```
 
 #### Get name and mail address from AD groups
-```
+```powershell
 Get-ADGroup -properties * -Filter  {(name -like "*sube grubu*")} |select name,mail | Export-Csv "C:\SubeGrubu.csv" -Encoding UTF8 -NoTypeInformation
+```
+
+#### Get mail groups from AD (run with exc management shell)
+```powershell
+Get-DistributionGroup -Filter * -ResultSize unlimited |select name, PrimarySmtpAddress  | Export-Csv c:\MailGroup.csv -NoTypeInformation -Encoding UTF8
 ```
 
 #### Get last modified date of computer object from AD
