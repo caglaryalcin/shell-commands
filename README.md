@@ -157,14 +157,20 @@ select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contac
 Get-ADGroup -properties * -Filter  {(name -like "*sube grubu*")} |select name,mail | Export-Csv "C:\SubeGrubu.csv" -Encoding UTF8 -NoTypeInformation
 ```
 
-#Get last modified date of computer object from AD
+#### Get last modified date of computer object from AD
+```powershell
 Get-ADcomputer -Filter 'Name -like "*computernamewashere"' -properties * | sort lastlogondate | FT name, whenChanged
+```
 
-#Get OU of hostname from AD
+#### Get OU of hostname from AD
+```powershell
 Get-ADcomputer -Filter 'Name -like "*computernamewashere"' -properties * | sort lastlogondate | FT name, CanonicalName
+```
 
-#Get OU of hostname list from AD
+#### Get OU of hostname list from AD
+```powershell
 Get-Content C:\hostnames.txt | foreach {Get-ADComputer -Filter {Name -Like $_} -properties *} | sort lastlogondate | FT name, CanonicalName
+```
 
 #### Change dns of servers
 ```powershell
