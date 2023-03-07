@@ -43,6 +43,13 @@ get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\Client
 get-wmiobject -Class Win32_Product | Select-Object Name, Version
 ```
 
+#### Get services status
+```powershell
+Get-Service -Name "servicesname*"
+Get-Service | Where-Object {$_.Status -eq "Running"}
+Get-Service "s*" | Sort-Object status
+```
+
 #### Check hash
 ```powershell
 Get-FileHash .\dosya -Algorithm SHA256
