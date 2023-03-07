@@ -46,6 +46,8 @@ Get-FileHash .\dosya -Algorithm SHA256
 #### Get permissions
 ```powershell
 net localgroup Administrators
+```
+```powershell
 net localgroup "Remote Desktop Users"
 ```
 
