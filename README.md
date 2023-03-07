@@ -23,6 +23,11 @@ takeown /F "C:\Windows.old" /A /R /D Y
 RD /S /Q "C:\Windows.old"
 ```
 
+#### .net 3.5 setup (Source:Windows iso)
+```powershell
+DISM /Online /Enable-Feature /FeatureName:NetFx3 /All /LimitAccess /Source:X:\sources\sxs
+```
+
 #### Check .net version
 ```powershell
 Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' | Select-Object Version
@@ -33,52 +38,15 @@ Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' | Se
 Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Virtual Machine\Guest\Parameters\' | Select-Object HostName
 ```
 
-#### Applications sent from SCCM
-```powershell
-get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\ClientSDK" | Select-Object FullName, InstallState
-```
-
-#### Get installed softwares
-```powershell
-get-wmiobject -Class Win32_Product | Select-Object Name, Version
-```
-
-#### Get services status
-```powershell
-Get-Service -Name "servicesname*"
-Get-Service | Where-Object {$_.Status -eq "Running"}
-Get-Service "s*" | Sort-Object status
-```
-
 #### Check hash
 ```powershell
 Get-FileHash .\dosya -Algorithm SHA256
-```
-
-#### Install sscm agent
-```powershell
-CCMSetup.exe /mp:sub.domain.com SMSSITECODE=domainsitecode FSP=sscmserver.domain.com
-```
-
-#### Collectively Move all AD OU
-```powershell
-Get-Content C:\import.txt| foreach {Get-ADComputer -Filter {Name -Like $_} |Move-ADObject -TargetPath "OU=Tier0,OU=App Servers,OU=OU,OU=OU,DC=DC,DC=local"}
 ```
 
 #### Get permissions
 ```powershell
 net localgroup Administrators
 net localgroup "Remote Desktop Users"
-```
-
-#### Get samaccountname from name and surname
-```powershell
-Get-ADUser -Filter 'Name -like "*namesurname"' | Format-Table Name,SamAccountName -A
-```
-
-#### Get userPrincipalNames from samaccountname
-```powershell
-Get-ADUser accountname -Properties * | select userPrincipalName
 ```
 
 #### Get users with ID (local)
@@ -96,14 +64,9 @@ Get-ADGroupMember -Identity "groupname" -Recursive | Get-ADUser -Properties Name
 Get-ADGroupMember -Identity "groupname" -Recursive | Get-ADUser -Properties Name, EmployeeID, userPrincipalName, distinguishedName | Export-csv -path C:\caglar-export\test.csv -notypeinformation -Encoding UTF8 
 ```
 
-#### Exchange Mail Inbox Receipt Check
+#### List dc
 ```powershell
-Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end "9/22/2022 3:00:00 PM" -Sender "sender@mail.com" -Recipients "recipients@mail.com"
-```
-
-#### Set Mail AutoReply
-```powershell
-Set-MailboxAutoReplyConfiguration ADUSERNAME -AutoReplyState enabled -ExternalAudience all -InternalMessage "Message was here"
+Get-ADDomainController -Filter * | Select hostname, site
 ```
 
 #### Install Telnet Client
@@ -116,7 +79,7 @@ Install-WindowsFeature -name Telnet-Client
 Search-ADAccount -LockedOut -ResultPageSize 2000 -resultSetSize $null | Select-Object Name, SamAccountName, DistinguishedName | Export-CSV “C:\LockedUserList.CSV” -NoTypeInform
 ```
 
-#### Get Group Members from AD
+#### Get Group Member from AD
 ```powershell
 Get-ADGroupMember -Identity 'Groupname' -Recursive | Select Name
 ```
@@ -125,18 +88,6 @@ Get-ADGroupMember -Identity 'Groupname' -Recursive | Select Name
 ```powershell
 Get-ADUser -server dc.hostname.com -Filter {enabled -eq "true" -and objectclass -eq "user"} -properties * | Select-Object Name,SamAccountName,lastlogondate | 
 Export-csv C:\DomainUsers.csv -NoTypeInformation -Encoding UTF8
-```
-
-#### Get user mail export
-```powershell
-(all)
-New-MailboxExportRequest -Mailbox username -AcceptLargeDataLoss -BadItemLimit 150 -FilePath \\filepath\file.pst
-(The date is intermittent / The dates should be set according to the zone setting of the machine to be exported)
-New-MailboxExportRequest -ContentFilter {(Received -lt '07/26/2021') -and (Received -gt '07/05/2021')} -Mailbox "ADusername" -Name nameishere -FilePath \\filepath\inboxname.pst
-(status export)
-Get-MailboxExportRequest
-(remove of completed)
-Get-MailboxExportRequest -Status completed | Remove-MailboxExportRequest
 ```
 
 #### Get domain users
@@ -162,11 +113,6 @@ select cn,targetaddress,memberof,objectclass | out-file c:\therearefilter_contac
 #### Get name and mail address from AD groups
 ```powershell
 Get-ADGroup -properties * -Filter  {(name -like "*sube grubu*")} |select name,mail | Export-Csv "C:\SubeGrubu.csv" -Encoding UTF8 -NoTypeInformation
-```
-
-#### Get mail groups from AD (run with exc management shell)
-```powershell
-Get-DistributionGroup -Filter * -ResultSize unlimited |select name, PrimarySmtpAddress  | Export-Csv c:\MailGroup.csv -NoTypeInformation -Encoding UTF8
 ```
 
 #### Get last modified date of computer object from AD
@@ -205,6 +151,37 @@ foreach($nic in $nics){
 }
 ```
 
+#### Check disk size
+```powershell
+Get-Volume -DriveLetter C
+```
+
+#### Set TR Timezone
+```powershell
+Set-TimeZone -Id "Turkey Standard Time"
+```
+
+#### Applications sent from SCCM
+```powershell
+get-wmiobject -query "SELECT * FROM CCM_Application" -namespace "ROOT\ccm\ClientSDK" | Select-Object FullName, InstallState
+```
+
+#### Get installed softwares
+```powershell
+get-wmiobject -Class Win32_Product | Select-Object Name, Version
+```
+
+#### Get services status
+```powershell
+Get-Service -Name "servicesname*"
+```
+```powershell
+Get-Service | Where-Object {$_.Status -eq "Running"}
+```
+```powershell
+Get-Service "s*" | Sort-Object status
+```
+
 #### To get information about the last time the servers communicated with the domain
 ```powershell
 $ComputerList = get-content "E:\Liste.txt"
@@ -222,6 +199,53 @@ Catch    {
    $Computer   +  "*ADLastLogonTime*"  + "NOObject"
 	}
 }
+```
+
+#### Install sscm agent
+```powershell
+CCMSetup.exe /mp:sub.domain.com SMSSITECODE=domainsitecode FSP=sscmserver.domain.com
+```
+
+#### Collectively Move all on AD OU
+```powershell
+Get-Content C:\import.txt| foreach {Get-ADComputer -Filter {Name -Like $_} |Move-ADObject -TargetPath "OU=Tier0,OU=App Servers,OU=OU,OU=OU,DC=DC,DC=local"}
+```
+
+#### Get samaccountname from name and surname
+```powershell
+Get-ADUser -Filter 'Name -like "*namesurname"' | Format-Table Name,SamAccountName -A
+```
+
+#### Get userPrincipalNames from samaccountname
+```powershell
+Get-ADUser accountname -Properties * | select userPrincipalName
+```
+
+#### Exchange Mail Inbox Receipt Check
+```powershell
+Get-TransportService | Get-MessageTrackingLog -start "9/22/2022 9:00:00 AM" -end "9/22/2022 3:00:00 PM" -Sender "sender@mail.com" -Recipients "recipients@mail.com"
+```
+
+#### Set Mail AutoReply
+```powershell
+Set-MailboxAutoReplyConfiguration ADUSERNAME -AutoReplyState enabled -ExternalAudience all -InternalMessage "Message was here"
+```
+
+#### Get user mail export
+```powershell
+(all)
+New-MailboxExportRequest -Mailbox username -AcceptLargeDataLoss -BadItemLimit 150 -FilePath \\filepath\file.pst
+(The date is intermittent / The dates should be set according to the zone setting of the machine to be exported)
+New-MailboxExportRequest -ContentFilter {(Received -lt '07/26/2021') -and (Received -gt '07/05/2021')} -Mailbox "ADusername" -Name nameishere -FilePath \\filepath\inboxname.pst
+(status export)
+Get-MailboxExportRequest
+(remove of completed)
+Get-MailboxExportRequest -Status completed | Remove-MailboxExportRequest
+```
+
+#### Get mail groups from AD (run with exc management shell)
+```powershell
+Get-DistributionGroup -Filter * -ResultSize unlimited |select name, PrimarySmtpAddress  | Export-Csv c:\MailGroup.csv -NoTypeInformation -Encoding UTF8
 ```
 
 #### Get 0kb files from path
