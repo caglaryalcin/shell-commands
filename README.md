@@ -252,5 +252,9 @@ Get-DistributionGroup -Filter * -ResultSize unlimited |select name, PrimarySmtpA
 
 #### Get 0kb files from path
 ```powershell
-Get-ChildItem -Path C:\SourcePATH -Recurse -Force | Where-Object { $_.PSIsContainer -eq $false -and $_.Length -eq 0 } | Select -ExpandProperty FullName | Add-Content -Path c:\export.txt
+New-PSDrive -Name P -PSProvider FileSystem -Root "\\server\share"
+```
+
+```powershell
+Get-ChildItem -Path P:\SourcePATH -Recurse -Force | Where-Object { $_.PSIsContainer -eq $false -and $_.Length -eq 0 } | Select -ExpandProperty FullName | Add-Content -Path c:\export.txt
 ```
